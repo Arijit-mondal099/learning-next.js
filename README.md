@@ -169,3 +169,47 @@ app/
 
 - `_folder` prefix keeps folders private from routing
 - if you want use `_` in your route then you can use `%5F` instead.
+
+## Metadata
+
+We can only use one of them static/dynamic metadata inside an page and component mast to be SSR
+
+```javascript
+// staticly set metadata for this page
+export const metadata = {
+  title: "About page",
+  description: "Read about us how are we worked here..."
+}
+
+export default function AboutPage() {
+  return <section>Wellcome to the about page</section>;
+}
+
+// dynamicly set metadata for this page
+import { Metadata } from "next";
+
+interface Props {
+  params: Promise<{ productId: string }>;
+}
+
+// dynamicly set metadata for this page
+export const generateMetadata = async ({
+  params,
+}: Props): Promise<Metadata> => {
+  const { productId } = await params;
+  return {
+    title: `Product details of ${productId}`,
+  };
+};
+
+export default async function ProductDetailsPage({ params }: Props) {
+  const { productId } = await params;
+
+  return (
+    <section>
+      Wellcome to the products details page for product: {productId}
+    </section>
+  );
+}
+```
+
