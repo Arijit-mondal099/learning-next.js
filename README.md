@@ -168,3 +168,4 @@ app/
 **Private Folders**
 
 - `_folder` prefix keeps folders private from routing
+- if you want use `_` in your route then you can use `%5F` instead.
