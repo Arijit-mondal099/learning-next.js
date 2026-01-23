@@ -213,3 +213,59 @@ export default async function ProductDetailsPage({ params }: Props) {
 }
 ```
 
+## Params & Search Params
+
+Params is a promise that resolves to an object containing the dynamic route parameters.
+Search params is a promise that resolves to an object containing the query parameters.
+page.tsx has access both of them but layout.tsx only can access params
+
+```javascript
+"use server";
+
+interface Props {
+  params: Promise<{ productId: string }>;
+  searchParams: Promise<{ lang: "en" | "hi" | "be", page: string }>;
+}
+
+export default async function ProductDetailsPage({
+  params,
+  searchParams,
+}: Props) {
+  const { productId } = await params;
+  const { lang = "en", page = 1 } = await searchParams;
+
+  return (
+    <section>
+      <h1>Wellcome to the products details page for product: {productId}</h1>
+      <h4>Read all details in lang: {lang}, total page of details {page}</h4>
+    </section>
+  );
+}
+
+// ==================================================
+
+"use client";
+
+import { use } from "react";
+
+interface Props {
+  params: Promise<{ productId: string }>;
+  searchParams: Promise<{ lang: "en" | "hi" | "be", page: string }>;
+}
+
+export default function ProductDetailsPage({
+  params,
+  searchParams,
+}: Props) {
+  const { productId } = use(params);
+  const { lang = "en", page = 1 } = use(searchParams);
+
+  return (
+    <section>
+      <h1>Wellcome to the products details page for product: {productId}</h1>
+      <h4>Read all details in lang: {lang}, total page of details {page}</h4>
+    </section>
+  );
+}
+```
+
