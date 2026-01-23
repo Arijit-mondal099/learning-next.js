@@ -269,3 +269,52 @@ export default function ProductDetailsPage({
 }
 ```
 
+## Programaticaly Navigate
+
+```javascript
+"use client";
+
+import { useRouter } from "next/navigation";
+
+export default function LoginPage() {
+  const router = useRouter();
+
+  const handlelogin = () => {
+    router.push("/"); // to navigate to home page keeping login page in history
+    router.replace("/"); // to navigate to home page without keeping login page in history
+    router.refresh(); // to refresh the current route
+    router.back(); // to go back to the previous page
+    router.forward(); // to go forward to the next page
+    router.prefetch("/"); // to prefetch the home page
+  };
+
+  return (
+    <section>
+      <h1>Login page</h1>
+      <button onClick={handlelogin}>Login</button>
+    </section>
+  );
+}
+
+// example 2
+
+import { redirect } from "next/navigation";
+
+export default async function ReviewsPage({
+  params,
+}: {
+  params: Promise<{ productId: string; reviewId: string }>;
+}) {
+  const { productId, reviewId } = await params;
+
+  if (parseInt(reviewId) > 1000) {
+    redirect("/products");
+  }
+
+  return (
+    <section>
+      Wellcome to the product {productId}, review {reviewId} page
+    </section>
+  );
+}
+```

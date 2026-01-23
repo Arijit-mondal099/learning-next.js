@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function ReviewsPage({
   params,
@@ -9,7 +9,8 @@ export default async function ReviewsPage({
 
   // we have only < 1000 reviews, if user trying to access > 1000 reviews then show 404 page
   if (parseInt(reviewId) > 1000) {
-    notFound();
+    // notFound();
+    redirect("/products");
   }
 
   return (
