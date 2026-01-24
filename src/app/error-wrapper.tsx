@@ -31,7 +31,7 @@ const ErrorSimulator = ({
 
 export default function ErrorWrapper({ children }: ErrorWrapperProps) {
   return (
-    <div className="bg-red-400">
+    <div>
       <h1>Global Error Boundary Wrapper</h1>
       <ErrorSimulator message="Simulated error from ErrorWrapper!" />
       <div>{children}</div>
