@@ -321,7 +321,7 @@ export default async function ReviewsPage({
 
 ## Templates
 
-Templates are similar to layouts in that they are also share UI between multiple pages in your app, carete a template by exporting a default react component form a template.tsx/template.js file
+Templates are similar to layouts in that they are also share UI between multiple pages in your app, carete a template by exporting a default react component form a template.tsx/template.js file (template also appect children lite layout)
 
 Whenever a user navigates between routes sharing a template, you get a completely fresh start
 
@@ -330,3 +330,18 @@ Whenever a user navigates between routes sharing a template, you get a completel
 - state is cleared
 - effects are re-synchronized
 
+## Next.js Component Hierarchy
+
+```text
+<Layout>
+  <Template>
+    <ErrorBoundary fallback={<Error />}>
+      <Suspense fallback={<Loading />}>
+        <ErrorBoundary fallback={<NotFound />}>
+          <Page />
+        </ErrorBoundary>
+      </Suspense>
+    </ErrorBoundary>
+  </Template>
+</Layout>
+```
