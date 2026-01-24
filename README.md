@@ -318,3 +318,15 @@ export default async function ReviewsPage({
   );
 }
 ```
+
+## Templates
+
+Templates are similar to layouts in that they are also share UI between multiple pages in your app, carete a template by exporting a default react component form a template.tsx/template.js file
+
+Whenever a user navigates between routes sharing a template, you get a completely fresh start
+
+- A new template component instance is mounted
+- DOM elements are re-created
+- state is cleared
+- effects are re-synchronized
+
