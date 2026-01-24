@@ -30,6 +30,10 @@ export default function ProductDetailsPage({
   const { productId } = use(params);
   const { lang = "en", page = 1 } = use(searchParams);
 
+  if (productId === "0") {
+    throw new Error("Product not found!");
+  }
+
   return (
     <section>
       <h1>Wellcome to the products details page for product: {productId}</h1>
