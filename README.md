@@ -345,3 +345,27 @@ Whenever a user navigates between routes sharing a template, you get a completel
   </Template>
 </Layout>
 ```
+
+## Interceptting Routes
+
+Intercepting Routes are one of the most powerful App Router features in Next.js. They let you show a route inside another route’s UI — without leaving the current page (context).
+
+| Pattern         | Meaning                    |
+| --------------- | -------------------------- |
+| `(.)route`      | Intercept from same level  |
+| `(..)route`     | Intercept from parent      |
+| `(...)route`    | Intercept from root        |
+| `(..)(..)route` | Intercept from grandparent |
+
+```text
+app/
+├ feed/
+│  ├ page.tsx
+│  ├ @modal/
+│  │  └ (.)photo/
+│  │     └ [id]/
+│  │        └ page.tsx
+├ photo/
+│  └ [id]/
+│     └ page.tsx
+```
