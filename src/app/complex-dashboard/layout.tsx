@@ -32,13 +32,17 @@ export default function ComplexDashboardLayout({
   users,
   revenue,
   notification,
+  login
 }: {
   children: React.ReactNode;
   users: React.ReactNode;
   revenue: React.ReactNode;
   notification: React.ReactNode;
+  login: React.ReactNode;
 }) {
-  return (
+  const isAutnenticated = true;
+
+  return isAutnenticated ? (
     <div>
       <header>
         <h1>Complex Dashboard header</h1>
@@ -67,5 +71,7 @@ export default function ComplexDashboardLayout({
         <h1>Complex dashboard footer</h1>
       </footer>
     </div>
+  ) : (
+    login
   );
 }
