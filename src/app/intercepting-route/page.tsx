@@ -5,7 +5,7 @@ interface InterceptingPageProps {
   searchParams: Promise<{ slug: string }>;
 }
 
-const InterceptingPage: React.FC<InterceptingPageProps> = ({ params, searchParams }) => {
+const InterceptingPage: React.FC<InterceptingPageProps> = () => {
   return (
     <div className="flex flex-col gap-4">
       <h1>Learning intercepting routes...</h1>
