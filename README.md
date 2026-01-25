@@ -537,3 +537,23 @@ HTTP headers represent the metadata of an API request and response, these are se
 `Accept` which indicates the content types like text, video, or image
 
 `Authorization` header used to indentify authenticate users
+
+## Caching in `Route Handlers`
+
+Route handlers are not cached by default but you can opt into caching when using the GET method, caching only works with `GET` method, other HTTP methods like POST, PUT, PATCH, and DELETE are never cached.
+
+If you're using dynamic fun's like `headers()` and `cookies()`, or working with the `request object` in your `GET` method, caching won't be applied.
+
+```javascript
+export const dynamic = "force-dynamic"; // Ensure the route is always dynamic (cached per request)
+export const revalidate = 10; // Revalidate the response every 10 seconds
+
+export async function GET() {
+    const now = new Date();
+    return Response.json({
+        success: true,
+        message: "Time fetched successfully",
+        time: now,
+    });
+}
+```
