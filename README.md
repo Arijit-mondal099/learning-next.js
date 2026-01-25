@@ -369,3 +369,171 @@ app/
 │  └ [id]/
 │     └ page.tsx
 ```
+
+## Next.js Route Handlers
+
+In the Next.js App Router, routing is not limited to pages that return HTML.
+You can also create custom request handlers using a powerful feature called `Route Handlers`.
+
+Route Handlers allow you to build `RESTful APIs` directly inside your Next.js app — without setting up a separate backend server like Express or Fastify.
+
+**Think of Route Handlers as:** Built-in backend endpoints for your Next.js application.
+
+**They run server-side only, meaning:**
+-Private keys stay secure
+-Database credentials never reach the browser
+-Business logic stays protected
+
+Unlike page routes, which give us HTML content, Route handlers lets us to build `RESTful` endpoints whith control over the reponse, Think of it like building a Node + Express app (there is not need to set up and configure a separate server), Route handlers run `server-side`, our sensitive info like private keys stay secure and never reaches the browser.
+
+Next.js Route handlers supports `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, and `OPTIONS`
+
+### Pages vs Route Handlers
+
+| Feature  | Pages (`page.tsx`) | Route Handlers (`route.ts`) |
+| -------- | ------------------ | --------------------------- |
+| Purpose  | Render UI (HTML)   | Handle API requests         |
+| Output   | JSX / HTML         | JSON / Response             |
+| Runs on  | Client + Server    | Server only                 |
+| Use case | UI pages           | APIs, auth, DB, webhooks    |
+
+### Folder Structure
+
+```text
+app/api/users/route.ts
+```
+
+This creates the endpoint: http://localhost:3000/api/users
+
+### Example Of CURD
+
+```javascript
+// app/api/notes/route.ts
+import { NextRequest, NextResponse } from "next/server";
+
+import { db_connection } from "@/lib/db_connection";
+import NoteModel from "@/models/Note.model";
+
+// get notes
+export async function GET(req: NextRequest) {
+    try {
+        await db_connection();
+        const notes = await NoteModel.find({}).sort({ createdAt: -1 });
+        return NextResponse.json({ success: true, notes }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error }, { status: 500 });
+    } 
+}
+
+// create note
+export async function POST(req: NextRequest) {
+    try {
+        const body = await req.json();
+        const { title, content } = body;
+
+        if (!title || !content) {
+            return NextResponse.json({ success: false, message: "Title and content are required" }, { status: 400 });
+        }
+
+        await db_connection();
+        const newNote = await NoteModel.create({ title, content });
+
+        return NextResponse.json({ success: true, note: newNote }, { status: 201 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error }, { status: 500 });
+    }   
+}
+
+// app/api/notes/[id]/route.ts
+import { db_connection } from "@/lib/db_connection";
+import NoteModel from "@/models/Note.model";
+import { NextRequest, NextResponse } from "next/server";
+
+interface IParams {
+  params: {
+    id: string;
+  };
+}
+
+// update note
+export async function PUT(req: NextRequest, { params }: IParams) {
+  try {
+    const { id } = await params;
+    const body = await req.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Note ID is required" },
+        { status: 400 },
+      );
+    }
+
+    const note = await NoteModel.findByIdAndUpdate(
+        id, 
+        { ...body },
+        { new: true, validators: true }
+    );
+
+    if (!note) {
+      return NextResponse.json(
+        { success: false, message: "Note not found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(
+      { success: true, message: "Note updated successfully", note },
+      { status: 200 },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Internal server error", error },
+      { status: 500 },
+    );
+  }
+}
+
+// delete note
+export async function DELETE(req: NextRequest, { params }: IParams) {
+  try {
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Note ID is required" },
+        { status: 400 },
+      );
+    }
+
+    await db_connection();
+    const deletedNote = await NoteModel.findByIdAndDelete(id);
+
+    if (!deletedNote) {
+      return NextResponse.json(
+        { success: false, message: "Note not found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(
+      { success: true, message: "Note deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Internal server error", error },
+      { status: 500 },
+    );
+  }
+}
+```
+
+### Headers in roure handlers
+
+HTTP headers represent the metadata of an API request and response, these are sent by the client they contain information about the request, which helps the server to understand and process it correctly.
+
+`User-Agent` which identifies the browser and operating system to the server.
+
+`Accept` which indicates the content types like text, video, or image
+
+`Authorization` header used to indentify authenticate users
