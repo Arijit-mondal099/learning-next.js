@@ -1,4 +1,4 @@
-import ImageModal from "@/components/modal";
+import ImageModal from "@/components/Modal";
 import wondersImages, { WonderImage } from "../../wonders";
 import Image from "next/image";
 
