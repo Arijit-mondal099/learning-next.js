@@ -5,6 +5,7 @@
 import { Metadata } from "next";
 import ErrorWrapper from "./error-wrapper";
 import "./globals.css";
+import { AppContextProvider } from "@/components/AppContext";
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ErrorWrapper>{children}</ErrorWrapper>
+        <AppContextProvider>
+          <ErrorWrapper>{children}</ErrorWrapper>
+        </AppContextProvider>
       </body>
     </html>
   );
